@@ -1,4 +1,4 @@
-# pytorch-manual-layers
+# Custom implementation of Conv2D and Linear layers in Pytorch
 
 This repo hosts custom versions of conv2d and linear layers written in C++ and CUDA, to work with PyTorch. 
 
