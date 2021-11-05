@@ -6,6 +6,13 @@ I did this to be able to experiment with modifying the underlying operations in 
 
 Feel free to use this code if it can be of use to you. But *please note*, I am absolutely no expert in PyTorch. So if you have any questions about PyTorch itself, please post it on their discussion forums. 
 
+If you find this code useful and fork it, please consider sharing your code back as well so others can find it too! 
+
+## Caveats: 
+* Only Conv2d and linear layers are overloaded. All other layers must be supported via PyTorch. 
+* I only implemented the forward pass for conv2d and linear. Backward passes continue to use the built-in Pytorch functions. 
+* For Conv2D, the code only supports a stride of 1. If I change it to support other strides, I will update the repo. 
+
 ## Repo description
 
 * mnist_test.py: The main file that loads the baseline network using pytorch code, the custom model using the custom layers as well as a model that uses fake quantization using the Nvidia pytorch-quantization-toolkit. 
