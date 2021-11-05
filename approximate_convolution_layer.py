@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.grad
-import torch.nn.functional as F
 import numpy as np
 import cuda_layers
 import cpp_layers
@@ -10,24 +9,24 @@ import pdb
 class convAppx(torch.autograd.Function):
 
     @staticmethod
-    def forward(ctx, X, weight, bias, padding=(1, 1), stride=(1, 1)):
-        confs = torch.from_numpy(np.array([stride[0], padding[0]]))
+    def forward(ctx, X, weight, bias, padding=1, stride=1):
+        confs = torch.from_numpy(np.array([stride, padding]))
         ctx.save_for_backward(X, weight, bias, confs)
 
         (b, n_C_prev, n_H_prev, n_W_prev) = X.shape
         (n_oC, n_iC, f, f) = weight.shape
 
-        n_H = ((n_H_prev - f + (2 * padding[0])) // stride[0]) + 1
-        n_W = ((n_W_prev - f + (2 * padding[0])) // stride[0]) + 1
+        n_H = ((n_H_prev - f + (2 * padding)) // stride) + 1
+        n_W = ((n_W_prev - f + (2 * padding)) // stride) + 1
 
-        X_pad = F.pad(X, (padding[0], padding[0], padding[0], padding[0]))
+        X_pad = torch.nn.functional.pad(X, (padding, padding, padding, padding))
 
         if X.is_cuda:
             # This conv layer makes heavy use of torch functions such as unfold below
             # This way a conv layer, just like an FC layer, just becomes a big matrix mult
             # which is really efficient to run on GPU.
 
-            inp_unf = torch.nn.functional.unfold(X_pad, (f, f))
+            inp_unf = torch.nn.functional.unfold(X_pad, (f, f), padding=padding, stride=stride)
             inp_unf = inp_unf.transpose(1, 2)
             weight = weight.view(weight.size(0), -1).t()
 
