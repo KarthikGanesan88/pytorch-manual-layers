@@ -11,7 +11,7 @@ If you find this code useful and fork it, please consider sharing your code back
 ## Caveats: 
 * Only Conv2d and linear layers are overloaded. All other layers must be supported via PyTorch. 
 * I only implemented the forward pass for conv2d and linear. Backward passes continue to use the built-in Pytorch functions. 
-* For Conv2D, the code only supports a stride of 1. If I change it to support other strides, I will update the repo. 
+* For Conv2D, the CUDA code supports all padding, stride and dilation modes (since I just use PyTorch's inbuilt unfold function). But the CPP version only supports stride = 1 and dilation = 1. 
 
 ## Repo description
 
